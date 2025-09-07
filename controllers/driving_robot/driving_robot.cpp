@@ -1,7 +1,6 @@
 #include <webots/DistanceSensor.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
-#include <webots/InertialUnit.hpp>
 #include <webots/Camera.hpp>
 
 #define TIME_STEP 64
@@ -11,10 +10,10 @@
 
 using namespace webots;
 
-//Para mayor facilidad serán globales nuestras variables
+// For simplicity, variables will be global
 
-Motor* motors[NUM_MOTORS]; //4 motores: uno x cada llanta
-DistanceSensor *ds[NUM_SENSORS]; // 2 sensores en la parte frontal
+Motor* motors[NUM_MOTORS]; // 4 motors: one for each wheel
+DistanceSensor *ds[NUM_SENSORS]; // 2 front-facing distance sensors
 Camera *camera;
 
 void initializeMotors(Robot *robot);
@@ -28,14 +27,9 @@ int main(int argc, char **argv) {
   initializeSensors(robot);
   initializeMotors(robot);
   initializeCamera(robot);
-  /*
-  InertialUnit *iu;
-  iu= robot->getInertialUnit("imu");
-  iu->enable(TIME_STEP);
-  */
   
-  int retrocedeCounter = 0; //retroceder el robot antes de dar vuelta
-  int avoidObstacleCounter = 0; //girar robot
+  int retrocedeCounter = 0; // Counter to reverse the robot before turning
+  int avoidObstacleCounter = 0; // Counter to rotate the robot
   char arrow = 'N';
   
   while (robot->step(TIME_STEP) != -1) {
@@ -83,7 +77,7 @@ int main(int argc, char **argv) {
   return 0;  // EXIT_SUCCESS
 }
 
-//Inicializar los motores
+// Initialize the motors
 void initializeMotors(Robot *robot){
   char motor_names[4][8] = {"motor_1", "motor_2", "motor_3", "motor_4"};
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -93,7 +87,7 @@ void initializeMotors(Robot *robot){
   }
 }
 
-//Inicializar sensores
+// Initialize the distance sensors
 void initializeSensors(Robot *robot){
   char dsNames[NUM_SENSORS][10] = {"ds_right", "ds_left"};
   for (int i = 0; i < NUM_SENSORS; i++) {
@@ -102,12 +96,13 @@ void initializeSensors(Robot *robot){
   }
 }
 
+// Initialize the camera
 void initializeCamera(Robot *robot){
   camera = robot->getCamera("CAM");
   camera->enable(TIME_STEP);
 }
 
-//verificar de que color es la flecha: azul= izq, verde=der, rojo= meta final
+// Check the arrow color: blue = left, green = right, red = final goal
 char detectArrow() {
     const unsigned char *image = camera->getImage();
     int width = camera->getWidth();
@@ -115,7 +110,7 @@ char detectArrow() {
 
     int blueCount = 0, greenCount = 0, redCount = 0;
 
-    // Analizar la imagen buscando colores de flechas
+    // Analyze the image for arrow colors
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int red = camera->imageGetRed(image, width, x, y);
@@ -128,9 +123,9 @@ char detectArrow() {
         }
     }
 
-    if (blueCount > greenCount && blueCount > redCount) return 'L'; // Flecha a la izquierda
-    if (greenCount > blueCount && greenCount > redCount) return 'R'; // Flecha a la derecha
-    if (redCount > blueCount && redCount > greenCount) return 'S'; //para el robot
+    if (blueCount > greenCount && blueCount > redCount) return 'L'; // Left arrow
+    if (greenCount > blueCount && greenCount > redCount) return 'R'; // Right arrow
+    if (redCount > blueCount && redCount > greenCount) return 'S'; // Stop (goal)
 
-    return 'N'; // No se detectó nada
+    return 'N'; // No arrow detected
 }
