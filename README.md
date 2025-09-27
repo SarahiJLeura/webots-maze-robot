@@ -8,9 +8,9 @@ The project consists of building a \*\*4x4 meters maze\*\* in Webots, including:
 - A floor with sand texture and a perimeter wall with brick texture.
 - Internal walls with a different but also rough texture.
 - Three main objects:
-&nbsp; 1. A composite object (slide).
-&nbsp; 2. A pre-existing object in Webots.
-&nbsp; 3. A bridge (stone) with enough clearance for the robot to go underneath.
+  1. A composite object (slide).
+  2. A pre-existing object in Webots.
+  3. A bridge (stone) with enough clearance for the robot to go underneath.
 
 In addition, a **mobile robot** was added with a camera and distance sensors. The robot:
 - Detects direction arrows placed strategically in the maze.
@@ -39,15 +39,11 @@ The simulation video can be found at the following link:
 
 \* https://youtu.be/uGfmg9Skfok \*
 
-
-
 ---
 
+✍️ **Author:** *Patricia Sarahi Jimenez-Leura*  
 
-
-✍️ \*\*Author:\*\* \*Patricia Sarahi Jimenez-Leura\*  
-
-📅 \*\*Due date:\*\* April 3, 2025
+📅 **Due date:** April 3, 2025
 
 
 
